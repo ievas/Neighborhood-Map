@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Neighborhood Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div id=map></div>
+
+    <script>
+      let map;
+      let locations = [
+        { lat: 56.983903, lon: 24.194472, title: 'Krusta baznīca' },
+        {lat: 56.974512, lon: 24.165999, title: 'VEF kultūras pils'},//vef
+        {lat: 56.970647, lon: 24.157338, title: 'Gaisa tilts'},//gaisa tilts
+        {lat: 56.95979, lon: 24.126173, title: 'Dailes teātris'}, //dailes teātris
+        {lat: 56.953298, lon: 24.105078, title: 'Latvijas Nacionālais teātris'},//nacionālais teātris
+        {lat: 56.951652, lon: 24.098093, title: 'Vanšu tilts'},//vanšu tilts
+        {lat: 56.948963, lon: 24.089456, title: 'Saules akmens'},//saules akmens
+      ]
+
+      function initMap(){
+        let zemitanaLaukums = {lat: 56.978575, lng: 24.186175},
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 11,
+          center: zemitanaLaukums
+        });
+
+        let marker = new google.maps.Marker ({
+          position: zemitanaLaukums,
+          map: map,
+          title: 'Zemitāna laukums'//locations.title
+        });
+
+
+        function allMarkers() {
+
+          for (let { lat, lon, title } of locations) {
+            new google.maps.Marker({ position: new google.maps.LatLng(lat, lon), title }).setMap(map);
+            //let popUpContent = title;
+          }
+        };
+        allMarkers();
+
+        popupContent = 'Zemitāna laukums';
+        let popupWindow = new google.maps.InfWindow({
+          content: popupContent
+        })
+//TODO: pašlaik animācija un popup strādā tikai zemitāna laukumam, viss jāievieto for ciklā
+//TODO: setTimeOut, lai popup un animācija nenotiek reizē
+//TODO: lai uzklikšķinot uz cita marķiera, pirmā logs aizveras
+//TODO: lai animācija apstājas pēc 5 sek
+        marker.addListener('click', function() {
+            popUpWindow.open(map, marker);
+        });
+//*** animation
+        marker.addListener('click', Bounce);
+
+
+      function Bounce(){
+         if (marker.getAnimation() !== null){
+           marker.setAnimation(null);
+         } else {
+           marker.setAnimation(google.maps.Animation.BOUNCE);
+         };
+       };
+      }
+
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcxHso7B1g-e9TrLL5DJms48TI7L7T4Hw&callback=initMap"
+    ></script>
+    <script type="application/javascript" charset="utf-8" src="main.js"></script>
+  </body>
+</html>
