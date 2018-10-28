@@ -1,0 +1,30 @@
+html, body{
+  font-family: Arial, sans-sherif;
+  /*height: 100%;*/
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  max-height: 15%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+#mapid{
+  /*height: 85%;*/
+  height: 720px;
+}
