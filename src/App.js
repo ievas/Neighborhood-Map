@@ -4,7 +4,7 @@ import './Map.js'
 import './LocationTable.js'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
-import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
+
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -17,7 +17,7 @@ L.Icon.Default.mergeOptions({
 
 class App extends Component {
   componentDidMount(){
-    let map = L.map('mapid').setView([56.970647, 24.157338], 11);
+    let map = L.map('mapid').setView([56.970647, 24.157338], 11.5);
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -66,6 +66,15 @@ class App extends Component {
         <header className="header">Riga Bedtime Story Route</header>
         <div className="content">
           <div className="location-container">
+            <div className="input-wrapper">
+              <input
+              className="list-item"
+              type="text"
+              placeholder="Search"
+              //value={this.state.query}
+              //onChange = {(event) => this.updateQuery(event.target.value)}
+              />
+            </div>
             <div className="location-list">
               <div className="list-item">Krusta baznīca</div>
               <div className="list-item">Zemitāna laukums</div>
