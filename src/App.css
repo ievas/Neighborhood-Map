@@ -1,30 +1,62 @@
-html, body{
-  font-family: Arial, sans-sherif;
-  /*height: 100%;*/
+body {
   margin: 0;
   padding: 0;
 }
 
+html, body {
+  font-family: Arial, sans-sherif;
+}
+
 .App {
+
+}
+
+.header {
+  background-color: #282c34;
+  max-height: 15%;
+  display: block;
+  font-size: calc(10px + 2vmin);
+  color: white;
   text-align: center;
 }
 
-.App-header {
-  background-color: #282c34;
-  max-height: 15%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.content{
+display: flex;
+flex-direction: row;
+}
+.map-container {
+  width: 70%;
+  height: 800px;
+  /*position: relative;*/
 }
 
-.App-link {
-  color: #61dafb;
+#mapid {
+  /*display: inline-block;*/
+  height: 100%;
+  width: 100%;
 }
 
-#mapid{
-  /*height: 85%;*/
-  height: 720px;
+.location-container {
+width: 30% ;
+
+}
+.location-list {
+width: 100%;
+
+}
+.list-item {
+text-align: center;
+padding: 40px 0;
+box-sizing: border-box;
+height: 100px;
+border: 2px solid black;
+border-top: none;
+}
+
+@keyframes fade {
+  from { opacity: 0.5; }
+}
+
+.blinking {
+  animation: fade 1s infinite alternate;
 }

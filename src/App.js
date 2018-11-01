@@ -4,6 +4,7 @@ import './Map.js'
 import './LocationTable.js'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
+import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -16,7 +17,7 @@ L.Icon.Default.mergeOptions({
 
 class App extends Component {
   componentDidMount(){
-    let map = L.map('mapid').setView([56.970647, 24.157338], 12.5);
+    let map = L.map('mapid').setView([56.970647, 24.157338], 11);
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -24,6 +25,15 @@ class App extends Component {
       id: 'mapbox.streets',
       accessToken: 'pk.eyJ1IjoiamV2YSIsImEiOiJjamx0djlxZWMwZTBhM3FvaXA2a3JteDN5In0.T6cHWQyXjXsDhwBVTemdYw'
     }).addTo(map);
+
+    // L.mapbox.accessToken = 'pk.eyJ1IjoiamV2YSIsImEiOiJjamx0djlxZWMwZTBhM3FvaXA2a3JteDN5In0.T6cHWQyXjXsDhwBVTemdYw';
+    // let map = L.mapbox.map('mapid')
+    //     .setView([56.970647, 24.157338], 11);
+
+    // Add tiles from the Mapbox Static API tiles endpoint
+    // (https://www.mapbox.com/api-documentation/#retrieve-raster-tiles-from-styles)
+    // Tiles are 512x512 pixels and are offset by 1 zoom level
+    //L.mapbox.styleLayer('mapbox://styles/jeva/cjnwf7pzd6lwo2sp0rsk7tml5').addTo(map);
 
     let locations = [
       {latlng: {lat: 56.983903, lng: 24.194472}, title: 'Krusta baznīca' },
@@ -38,19 +48,39 @@ class App extends Component {
 
     locations.forEach(location => {
       let {latlng, title} = location;
-      location.marker = L.marker(latlng).addTo(map).bindPopup(title);
+      location.marker = L.marker(latlng, {
+        icon:L.icon({
+          iconUrl: 'https://unpkg.com/leaflet@1.0.3/dist/images/marker-icon.png',
+          className: 'blinking'
+        })
+      }).addTo(map).bindPopup(title)
     })
-
-
   }
+  //blink animation from: https://stackoverflow.com/questions/41884070/how-to-make-markers-in-leaflet-blinking
   componentWillUnmount(){
 
   }
   render() {
     return (
       <div className="App">
-        <header className="App-header">Riga Bedtime Story Route</header>
-        <div id="mapid"></div>
+        <header className="header">Riga Bedtime Story Route</header>
+        <div className="content">
+          <div className="location-container">
+            <div className="location-list">
+              <div className="list-item">Krusta baznīca</div>
+              <div className="list-item">Zemitāna laukums</div>
+              <div className="list-item">VEF kultūras pils</div>
+              <div className="list-item">Gaisa tilts</div>
+              <div className="list-item">Dailes teātris</div>
+              <div className="list-item">Latvijas Nacionālais teātris</div>
+              <div className="list-item">Vanšu tilts</div>
+              <div className="list-item">Saules akmens</div>
+            </div>
+          </div>
+          <div className="map-container">
+            <div id="mapid"></div>
+          </div>
+        </div>
       </div>
     );
   }
