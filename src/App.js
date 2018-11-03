@@ -5,6 +5,19 @@ import './LocationTable.js'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 
+import Modal from 'react-modal';
+Modal.setAppElement('#root');
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};//modal
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -31,7 +44,9 @@ let map;
 class App extends Component {
 
   state = {
-    locations: locations
+    locations: locations,
+    modalIsOpen: false,
+
   }
 
   componentDidMount() {
@@ -64,6 +79,9 @@ class App extends Component {
 
     let location = locations.find(location => location.title === e.target.innerText);
     location.marker.openPopup();
+
+    this.setState({ modalTitle: e.target.innerText });
+    this.openModal();
   }
 
   search(e) {
@@ -75,7 +93,7 @@ class App extends Component {
     this.setState({
       locations: found
     });
-
+//hide markers
     locations.forEach(location => {
 
       location.marker.removeFrom(map);
@@ -87,15 +105,41 @@ class App extends Component {
     });
   }
 
+  openModal() {
+    this.setState({modalIsOpen: true});
+  }
+
+  afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    // this.subtitle.style.color = '#f00';
+  }
+
+  closeModal() {
+    this.setState({modalIsOpen: false});
+  }
+
   render() {
 
     let list = this.state.locations.map(location => {
-      return <div onClick={this.selectItem} className="list-item">{location.title}</div>;
+      return <div onClick={(e)=>{this.selectItem(e)}} className="list-item">{location.title}</div>;
     });
 
     return (
       <div className="App">
+
+        <Modal
+          isOpen={this.state.modalIsOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={()=>this.closeModal()}
+          style={customStyles}
+          contentLabel="Info Modal">
+            <h2 ref={subtitle => this.subtitle = subtitle}>{this.state.modalTitle}</h2>
+            <button onClick={()=>this.closeModal()}>close</button>
+            <div></div>
+        </Modal>
+
         <header className="header">Riga Bedtime Story Route</header>
+
         <div className="content">
           <div className="location-container">
             <div className="input-wrapper">
