@@ -4,6 +4,7 @@ import './Map.js'
 import './LocationTable.js'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
+import * as api from './api.js'
 
 import Modal from 'react-modal';
 Modal.setAppElement('#root');
@@ -29,7 +30,7 @@ L.Icon.Default.mergeOptions({
 //fix for default icon path; a workaround by @PTihomir from: https://github.com/Leaflet/Leaflet/issues/4968#issuecomment-269750768
 
 let locations = [
-  {latlng: {lat: 56.983903, lng: 24.194472}, title: 'Krusta baznīca' },
+  {latlng: {lat: 56.983903, lng: 24.194472}, title: 'Rīgas Krusta baznīca' },
   {latlng: {lat: 56.978575, lng: 24.186175}, title: 'Zemitāna laukums'},
   {latlng: {lat: 56.974512, lng: 24.165999}, title: 'VEF kultūras pils'},//vef
   {latlng: {lat: 56.970647, lng: 24.157338}, title: 'Gaisa tilts'},//gaisa tilts
@@ -46,7 +47,9 @@ class App extends Component {
   state = {
     locations: locations,
     modalIsOpen: false,
-
+    modalTitle: '',
+    modalImageUrl: '',
+    popupIconUrl: ''
   }
 
   componentDidMount() {
@@ -61,26 +64,66 @@ class App extends Component {
     }).addTo(map);
 
     locations.forEach(location => {
-      let {latlng, title} = location;
+      let {latlng} = location;
       location.marker = L.marker(latlng, {
         icon:L.icon({
           iconUrl: 'https://unpkg.com/leaflet@1.0.3/dist/images/marker-icon.png',
           className: 'blinking'
         })
-      }).addTo(map).bindPopup(title)
+      }).addTo(map);
+
+    location.marker.on('click', async e => {
+
+      let location = locations.find(location => location.marker === e.target);
+
+      if (location.marker.getPopup()){
+        return;
+      }
+      let { title } = location;
+      let {lat, lng} = location.latlng;
+
+      let foursquareData = await api.fetchFoursquareData(lat, lng, title);
+
+      location.marker.unbindPopup();
+      location.marker.bindPopup(`
+          <p>${title}</p>
+          <img src="${foursquareData.iconUrl}" alt="${title}"/>
+        `);
+
+      location.marker.openPopup();
+      });
     })
   }
+
   //blink animation from: https://stackoverflow.com/questions/41884070/how-to-make-markers-in-leaflet-blinking
   componentWillUnmount(){
 
   }
 
-  selectItem(e) {
+  async selectItem(e) {
 
     let location = locations.find(location => location.title === e.target.innerText);
     location.marker.openPopup();
 
-    this.setState({ modalTitle: e.target.innerText });
+    let { title } = location;
+    let {lat, lng} = location.latlng;
+
+    let foursquareData = await api.fetchFoursquareData(lat, lng, title);
+
+    location.marker.unbindPopup();
+
+    location.marker.bindPopup(`
+      <p>${title}</p>
+      <img src="${foursquareData.iconUrl}" alt="${title}"/>
+    `);
+
+    location.marker.openPopup();
+
+    this.setState({
+      modalTitle: title,
+      modalImageUrl: foursquareData.imageUrl,
+     });
+
     this.openModal();
   }
 
@@ -134,8 +177,8 @@ class App extends Component {
           style={customStyles}
           contentLabel="Info Modal">
             <h2 ref={subtitle => this.subtitle = subtitle}>{this.state.modalTitle}</h2>
+            <img src={this.state.modalImageUrl} alt={this.state.modalTitle}/>
             <button onClick={()=>this.closeModal()}>close</button>
-            <div></div>
         </Modal>
 
         <header className="header">Riga Bedtime Story Route</header>
