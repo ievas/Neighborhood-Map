@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import './App.css'
 import './Map.js'
-import './LocationTable.js'
+import './LocationList.js'
+import './LocationListItem.js'
 import 'leaflet/dist/leaflet.css'
+import './App.css'
 import L from 'leaflet'
 import * as api from './api.js'
 
@@ -176,12 +177,14 @@ class App extends Component {
           onRequestClose={()=>this.closeModal()}
           style={customStyles}
           contentLabel="Info Modal">
-            <h2 ref={subtitle => this.subtitle = subtitle}>{this.state.modalTitle}</h2>
-            <img src={this.state.modalImageUrl} alt={this.state.modalTitle}/>
-            <button onClick={()=>this.closeModal()}>close</button>
+            <div className="modal-content-wrapper">
+             <h2 ref={subtitle => this.subtitle = subtitle}>{this.state.modalTitle}</h2>
+             <button onClick={()=>this.closeModal()} href="#close" className="close-button">x</button>
+             <img src={this.state.modalImageUrl} alt={this.state.modalTitle}/>
+            </div>
         </Modal>
 
-        <header className="header">Riga Bedtime Story Route</header>
+        <header className="header">Riga Bedtime Story Route<br/><i className="fa fa-bicycle" aria-hidden="true"></i></header>
 
         <div className="content">
           <div className="location-container">

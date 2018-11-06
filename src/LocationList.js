@@ -1,6 +1,6 @@
 import React from 'react'
 
-class LocationTable extends React.Component {
+class LocationList extends React.Component {
 
   render(){
     return(
@@ -9,4 +9,4 @@ class LocationTable extends React.Component {
   }
 }
 
-export default LocationTable;
+export default LocationList;
