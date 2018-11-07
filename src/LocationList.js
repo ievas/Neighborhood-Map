@@ -6,13 +6,13 @@ import L from 'leaflet'
 
 delete L.Icon.Default.prototype._getIconUrl;
 
+// fix for default icon path; a workaround by @PTihomir
+// from: https://github.com/Leaflet/Leaflet/issues/4968#issuecomment-269750768
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
-// fix for default icon path; a workaround by @PTihomir from: https://github.com/Leaflet/Leaflet/issues/4968#issuecomment-269750768
-
 
 Modal.setAppElement('#root');
 
@@ -40,6 +40,7 @@ class LocationList extends React.Component {
 
   componentDidMount() {
 
+    // initialize map
     this.map = L.map('mapid').setView([56.970647, 24.157338], 11.5);
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -49,41 +50,47 @@ class LocationList extends React.Component {
       accessToken: 'pk.eyJ1IjoiamV2YSIsImEiOiJjamx0djlxZWMwZTBhM3FvaXA2a3JteDN5In0.T6cHWQyXjXsDhwBVTemdYw'
     }).addTo(this.map);
 
+    // add makers to locations, set click handler
     this.props.locations.forEach(location => {
       let {latlng} = location;
-      location.marker = L.marker(latlng, {
-        icon:L.icon({
-          iconUrl: 'https://unpkg.com/leaflet@1.0.3/dist/images/marker-icon.png',
-          className: 'blinking'
-        })
-      }).addTo(this.map);
-//blink animation from: https://stackoverflow.com/questions/41884070/how-to-make-markers-in-leaflet-blinking
-    location.marker.on('click', async e => {
+      location.marker = L.marker(latlng).addTo(this.map);
 
-      let location = this.props.locations.find(location => location.marker === e.target);
+      location.marker.on('click', async e => {
 
-      if (location.marker.getPopup()){
-        return;
-      }
-      let { title } = location;
-      let {lat, lng} = location.latlng;
+        let location = this.props.locations.find(location => location.marker === e.target);
 
-      let foursquareData = await api.fetchFoursquareData(lat, lng, title);
+        // if already initialized, don't fetch data
+        if (location.marker.getPopup()){
+          return;
+        }
 
-      location.marker.unbindPopup();
-      location.marker.bindPopup(`
-          <p>${title}</p>
-          <img src="${foursquareData.iconUrl}" alt="${title}"/>
-        `);
+        let { title } = location;
+        let {lat, lng} = location.latlng;
 
-      location.marker.openPopup();
+        let foursquareData = await api.fetchFoursquareData(lat, lng, title);
+
+        location.marker.unbindPopup();
+        location.marker.bindPopup(`
+            <p>${title}</p>
+            <img src="${foursquareData.iconUrl}" alt="${title}"/>
+          `);
+
+        location.marker.openPopup();
       });
     })
   }
 
+  // when list item is clicked
   async selectItem(e) {
 
     let location = this.props.locations.find(location => location.title.toLowerCase() === e.target.innerText.toLowerCase());
+
+    // animate marker after selecting from list
+    location.marker.setIcon(L.icon({
+      iconUrl: 'https://unpkg.com/leaflet@1.0.3/dist/images/marker-icon.png',
+      className: 'blinking'
+    }));
+
     location.marker.openPopup();
 
     let { title } = location;
