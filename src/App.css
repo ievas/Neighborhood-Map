@@ -33,7 +33,7 @@ height:85%;
 
 .map-container {
   width: 70%;
-  /*height: 978px;*/
+  height: 989px;
   z-index: 0;
   /*position: relative;*/
 }
@@ -48,7 +48,9 @@ height:85%;
 width: 30% ;
 height: 100%;
 }
-
+.location-list{
+height: 100%;
+}
 .list-item {
 text-align: center;
 padding: 40px 0;
@@ -56,20 +58,19 @@ box-sizing: border-box;
 height: 11%;
 border: 2px solid gray;
 border-top: none;
-background-color: black;
+background-color: #282c34;
 color: white;
 font-family: 'Catamaran', sans-serif;
 text-transform: uppercase;
 font-weight: bolder;
 }
 
-@keyframes fade {
+@keyframes blink {
   from { opacity: 0.5; }
-
 }
 
 .blinking {
-  animation: fade 1s 6 alternate;
+  animation: blink 1s 6 alternate;
 }
 
 .input-wrapper {
@@ -107,7 +108,7 @@ input {
 }
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
-    background: black;
+    background: #282c34;
     color: white;
     text-align: center;
   }
@@ -116,22 +117,6 @@ input {
 }
 .modal {
   z-index: 800;
-}
-
- @media only screen and (max-width: 768px){
-	.locations-list, .map-container{
-
-	}
-}
-@media only screen and (min-width: 769px){
-	.location-list, .map-container{
-
-	}
-}
-@media only screen and (min-width: 1200px){
-	#.location-list, .map-container{
-
-	}
 }
 @media only screen and (min-width: 1024px) and (orientation: portrait) {
   .location-container {
