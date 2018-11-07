@@ -148,7 +148,7 @@ class LocationList extends React.Component {
   render() {
 
     let list = this.state.locations.map(location => {
-      return <div onClick={(e)=>{this.selectItem(e)}} className="list-item">{location.title}</div>;
+      return <div key={location.title} onClick={(e)=>{this.selectItem(e)}} className="list-item">{location.title}</div>;
     });
 
     return (
