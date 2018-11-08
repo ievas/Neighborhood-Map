@@ -72,7 +72,7 @@ class LocationList extends React.Component {
         location.marker.unbindPopup();
         location.marker.bindPopup(`
             <p>${title}</p>
-            <img src="${foursquareData.iconUrl}" alt="${title}"/>
+            <img src="${foursquareData.iconUrl}" alt="${foursquareData.altText || title}"/>
           `);
 
         location.marker.openPopup();
@@ -102,7 +102,7 @@ class LocationList extends React.Component {
 
     location.marker.bindPopup(`
       <p>${title}</p>
-      <img src="${foursquareData.iconUrl}" alt="${title}"/>
+      <img src="${foursquareData.iconUrl}" alt="${foursquareData.altText || title}"/>
     `);
 
     location.marker.openPopup();
@@ -110,6 +110,7 @@ class LocationList extends React.Component {
     this.setState({
       modalTitle: title,
       modalImageUrl: foursquareData.imageUrl,
+      altText: foursquareData.altText
      });
 
     this.openModal();
@@ -148,7 +149,7 @@ class LocationList extends React.Component {
   render() {
 
     let list = this.state.locations.map(location => {
-      return <div key={location.title} onClick={(e)=>{this.selectItem(e)}} className="list-item">{location.title}</div>;
+      return <div tabIndex="0" role="button" aria-label="location" key={location.title} onClick={(e)=>{this.selectItem(e)}} className="list-item">{location.title}</div>;
     });
 
     return (
@@ -160,23 +161,24 @@ class LocationList extends React.Component {
           contentLabel="Info Modal">
             <div className="modal-content-wrapper">
              <h2 ref={subtitle => this.subtitle = subtitle}>{this.state.modalTitle}</h2>
-             <button onClick={()=>this.closeModal()} href="#close" className="close-button">x</button>
-             <img src={this.state.modalImageUrl} alt={this.state.modalTitle}/>
+             <button onClick={()=>this.closeModal()} href="#close" className="close-button" aria-label="Close">x</button>
+             <img src={this.state.modalImageUrl} alt={this.state.altText || this.state.modalTitle}/>
             </div>
         </Modal>
-        <div className="content">
+        <div className="content" aria-label="location list">
           <div className="location-container">
             <div className="input-wrapper">
               <input onChange={e => this.search(e)}
               className="list-item"
               type="text"
               placeholder="Search"
+              aria-label="search locations"
               />
             </div>
             <div className="location-list">{list}</div>
           </div>
           <div className="map-container">
-            <div id="mapid"></div>
+            <div id="mapid" role="application" aria-label="map"></div>
           </div>
         </div>
       </React.Fragment>

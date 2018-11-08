@@ -1,52 +1,58 @@
+import broken from './img/broken.png'
+import broken_icon_size from './img/broken_icon_size.png'
 
 async function fetchFoursquareData(lat, lng, query) {
 
+  let imageUrl = broken;
+  let iconUrl = broken_icon_size;
+  let altText = '';
 
-  let venueSearchUrl =
+  try {
 
-    `https://api.foursquare.com/v2/venues/search` +
-    `?ll=${lat},${lng}` +
-    `&query=${query}` +
-    `&radius=250` +
-    `&limit=1` +
-    `&client_id=${process.env.REACT_APP_CLIENT_ID}` +
-    `&client_secret=${process.env.REACT_APP_CLIENT_SECRET}` +
-    `&v=20181104`;
+    let venueSearchUrl =
 
-  // return image
+      `https://api.foursquare.com/v2/venues/search` +
+      `?ll=${lat},${lng}` +
+      `&query=${query}` +
+      `&radius=250` +
+      `&limit=1` +
+      `&client_id=${process.env.REACT_APP_CLIENT_ID}` +
+      `&client_secret=${process.env.REACT_APP_CLIENT_SECRET}` +
+      `&v=20181104`;
 
-  let venueSearchResult = await (await fetch(venueSearchUrl)).json();
+    let venueSearchResult = await (await fetch(venueSearchUrl)).json();
 
-  let venueId = venueSearchResult.response.venues[0].id;
+    let venueId = venueSearchResult.response.venues[0].id;
 
-  let venueDetailSearchUrl =
+    let venueDetailSearchUrl =
 
-    `https://api.foursquare.com/v2/venues/${venueId}` +
-    `?limit=1` +
-    `&client_id=${process.env.REACT_APP_CLIENT_ID}` +
-    `&client_secret=${process.env.REACT_APP_CLIENT_SECRET}` +
-    `&v=20181104`;
+      `https://api.foursquare.com/v2/venues/${venueId}` +
+      `?limit=1` +
+      `&client_id=${process.env.REACT_APP_CLIENT_ID}` +
+      `&client_secret=${process.env.REACT_APP_CLIENT_SECRET}` +
+      `&v=20181104`;
 
+    let venueDetailSearchResult = await (await fetch(venueDetailSearchUrl)).json();
 
-  let venueDetailSearchResult = await (await fetch(venueDetailSearchUrl)).json();
+    let bestPhoto = venueDetailSearchResult.response.venue.bestPhoto;
 
-  let imageUrl;
-  let bestPhoto = venueDetailSearchResult.response.venue.bestPhoto;
+    if (bestPhoto) {
+      let photoSize = '300x300';
+      imageUrl = `${bestPhoto.prefix}${photoSize}${bestPhoto.suffix}`;
+    }
 
-  if (bestPhoto) {
-    let photoSize = '300x300';
-    imageUrl = `${bestPhoto.prefix}${photoSize}${bestPhoto.suffix}`;
-  } else {
-    imageUrl = `https://ss3.4sqi.net/img/categories_v2/arts_entertainment/museum_history_512.png`;
+    let category = venueDetailSearchResult.response.venue.categories[0];
+    let iconSize = 88;
+    iconUrl = `${category.icon.prefix}${iconSize}${category.icon.suffix}`;
   }
-
-  let category = venueDetailSearchResult.response.venue.categories[0];
-  let iconSize = 88;
-  let iconUrl = `${category.icon.prefix}${iconSize}${category.icon.suffix}`;
+  catch (e) {
+    altText = `Couldn't load image.`;
+  }
 
   return {
     imageUrl,
-    iconUrl
+    iconUrl,
+    altText
   }
 }
 

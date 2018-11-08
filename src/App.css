@@ -23,7 +23,11 @@ height: 100vh;
   color: white;
   text-align: center;
 }
-
+.foursquare-logo {
+  position: absolute;
+  right: 0px;
+  padding: 10px;
+}
 .fa{
   font-size: 32px;
 }
@@ -96,9 +100,12 @@ input {
   width: 100%;
   padding: 40px 0;
   font-size: 1.25em;
-  border: 2px solid none;
+  border-top: 2px solid gray;
   /*outline: none;*/
   text-align: center;
+}
+input:focus list-item:focus{
+    border-color: pink;
 }
 ::placeholder {
     color: white;

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import LocationList from './LocationList.js'
 
 import './App.css'
+import fslogo from './img/Powered-by-Foursquare-black-300.png'
 
 let locations = [
   {latlng: {lat: 56.983903, lng: 24.194472}, title: 'Rīgas Krusta baznīca' },
@@ -27,7 +28,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="header">Riga Bedtime Story Route<br/><i className="fa fa-bicycle" aria-hidden="true"></i></header>
+        <header className="header">Riga Bedtime Story Route<br/><i className="fa fa-bicycle" aria-hidden="true"></i>
+        <img src={fslogo} alt="Foursquare logo" className="foursquare-logo"></img></header>
         <LocationList locations={locations}/>
       </div>
     );
