@@ -43,12 +43,23 @@ class LocationList extends React.Component {
     // initialize map
     this.map = L.map('mapid').setView([56.970647, 24.157338], 11.5);
 
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    let tileLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
       id: 'mapbox.streets',
       accessToken: 'pk.eyJ1IjoiamV2YSIsImEiOiJjamx0djlxZWMwZTBhM3FvaXA2a3JteDN5In0.T6cHWQyXjXsDhwBVTemdYw'
-    }).addTo(this.map);
+    });
+
+    let cb = () => {
+      alert(`Error loading map. Please check access token.`);
+    };
+
+    tileLayer.on('tileerror', () => {
+      cb();
+      cb = () => {};
+    });
+
+    tileLayer.addTo(this.map);
 
     // add makers to locations, set click handler
     this.props.locations.forEach(location => {

@@ -158,11 +158,11 @@ input:focus list-item:focus{
 height: 980px;
   }
 }
-@media only screen and (min-width: 768px) {
+/*@media only screen and (min-width: 768px) {
   #mapid {
 height: 980px;
   }
-}
+}*/
 @media only screen and (min-width: 960px) {
   #mapid {
 height: 988px;
