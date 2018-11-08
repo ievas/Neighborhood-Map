@@ -148,9 +148,14 @@ input:focus list-item:focus{
   height: 1093px;
   }
 }
-@media only screen and (min-width: 411px) {
+@media only screen and (min-width: 370px) {
   #mapid {
-  height: 1040px;
+  height: 980px;
+  }
+}
+@media only screen and (min-width: 520px) {
+  #mapid {
+height: 980px;
   }
 }
 @media only screen and (min-width: 768px) {
@@ -163,8 +168,8 @@ height: 980px;
 height: 988px;
   }
 }
-@media only screen and (min-width: 1316px) {
+/*@media only screen and (min-width: 1316px) {
   #mapid {
 height: 1220px;
   }
-}
+}*/
